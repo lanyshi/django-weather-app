@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark py-5 justify-content-center" style="background-color: #bde080;">
+        <span class="navbar-brand" style="font-size: 30px; font-weight: bold;">This Is A Weather App</span>
+    </nav>
+    <div class="container py-5">
+    <form class="form-row justify-content-center" action="/addCity/" method="post">{% csrf_token %}
+        <div class="form-group col-md-5 mb-2">
+        <input type="text" name="city_name" class="form-control" placeholder="City Name" style="border-color: #bde080;">
+        </div>
+        <button type="submit" class="btn col-sm-1 mb-2" style="background-color: #bde080; color: white;">Add</button>
+    </form>
+    {% if messages %}
+    <!-- ul class="messages" -->
+        {% for message in messages %}
+            <!-- li {% if message.tags %} class="{{ message.tags }}"{% endif %} -->
+            <div class="alert alert-danger mb-0 text-center" role="alert">{{ message }}</div>
+            <!-- /li -->
+        {% endfor %}
+    <!-- /ul -->
+    {% endif %}
+    </div>
+    <div class="container">
+    <div class="row mb-3">
+    {% for weather in weather_data %}
+        <div class="col-sm-4">
+            <div class="card" style="border-color: #bde080">
+                <div class="card-header" style="border-color: #bde080; background-color: #bde080">
+                    <form action="/deleteCity/{{ weather.id }}/" method="post">{% csrf_token %}
+                        <ul class="nav card-header-tabs justify-content-end">
+                            <li class="nav-item">
+                                <button type="submit" style="background-color: transparent; border: none">
+                                   <i class="material-icons" style="color: white; cursor: pointer;">close</i>
+                                </button>
+                            </li>
+                        </ul>
+                </div>
+                <div class="card-body  text-center">
+                        <h4 class="card-title">{{ weather.city }}</h4><br>
+                        <div class="row mb-4">
+                            <span class="card-text col-sm-4" style="opacity: 0.7">{{ weather.temp_min }}°F</span>
+                            <span class="card-text col-sm-4" style="font-size: 20px;">{{ weather.temperature }}°F</span>
+                            <span class="card-text col-sm-4" style="opacity: 0.7">{{ weather.temp_max }}°F</span>
+                        </div>
+                        <div class="row justify-content-center">
+                            <img src="http://openweathermap.org/img/wn/{{ weather.icon }}.png" width="30px" height="30px" alt="icon">
+                            <span class="card-text ml-2">{{ weather.description }}</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:3 %}
+            </div>
+            <div class="row mb-3">
+        {% endif %}
+    {% endfor %}
+    </div>
+    </div>
+
+</body>
+</html>
